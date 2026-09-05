@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortener</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 550px;
+            padding: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        button {
+            padding: 12px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #222;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #444;
+        }
+
+        #result {
+            margin-top: 25px;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 6px;
+            word-break: break-all;
+        }
+
+        #result a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        #result a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="container">
+        <h1>URL Shortener</h1>
+        <p class="subtitle">Turn long URLs into short links.</p>
+
+        <form id="urlForm">
+            <input
+                type="url"
+                id="originalUrl"
+                placeholder="Enter your long URL"
+                required
+            >
+
+            <button type="submit">Shorten</button>
+        </form>
+
+        <p id="result"></p>
+    </div>
+    <script>
+        document.getElementById("urlForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const originalUrl = document.getElementById("originalUrl").value;
+
+            const formData = new FormData();
+            formData.append("original_url", originalUrl);
+
+            const response = await fetch("/shorten", {
+                method: "POST",
+                body: formData
+            });
+
+            const data = await response.json();
+
+            document.getElementById("result").innerHTML =
+                `<a href="${data.short_url}" target="_blank">${data.short_url}</a>`;
+        });
+    </script>
+
+</body>
+</html>
